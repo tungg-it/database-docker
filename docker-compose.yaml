@@ -1,0 +1,130 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14.8
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - docker-network-dev
+
+  timescale-ha:
+    image: timescale/timescaledb-ha:pg15-latest
+    container_name: timescale-ha
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/timescale-ha:/home/postgres/pgdata/data
+    networks:
+      - docker-network-dev
+
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescale
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./db/timescale:/var/lib/postgresql/data
+    networks:
+      - docker-network-dev
+
+  mysql:
+    image: mysql:8.0.31
+    container_name: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: tungtt
+      MYSQL_PASSWORD: tungtt
+      MYSQL_DATABASE: database
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+    networks:
+      - docker-network-dev
+
+  redis:
+    image: redis:6.0.16
+    container_name: redis
+    restart: always
+    volumes:
+      - ./db/redis:/var/lib/redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    ports:
+      - "6379:6379"
+      - "26378:26379"
+    networks:
+      - docker-network-dev
+
+  mongodb:
+    image: mongo:7.0.6
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: MongoDB123
+      MONGO_INITDB_DATABASE=openhab: database
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db/mongodb:/data/db
+    networks:
+      - docker-network-dev
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./db/rabbitmq:/var/lib/rabbitmq/mnesia/
+    networks:
+      - docker-network-dev
+
+  elasticsearch:
+    image: bitnami/elasticsearch:8.5.3
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./db/elastic:/bitnami/elasticsearch/data
+    networks:
+      - docker-network-dev
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.5.3
+    container_name: kibana
+    restart: always
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    networks:
+      - docker-network-dev
+
+networks:
+  docker-network-dev:
+    driver: bridge
