@@ -44,7 +44,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${TIMESCALE_PORT}:5432"
+      - "${TIMESCALE_PORT}:5432"
     volumes:
       - ./db/timescale:/var/lib/postgresql/data
     networks:
@@ -62,7 +62,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${MYSQL_PORT}:3306
+      - "${MYSQL_PORT}:3306"
     volumes:
       - ./db/mysql:/var/lib/mysql
     networks:
@@ -79,6 +79,7 @@ services:
       - .env
     ports:
       - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT_1}:16379"
     networks:
       - docker-network-dev
 
@@ -120,8 +121,8 @@ services:
     container_name: elasticsearch
     restart: always
     ports:
-      - ${ELASTICSEARCH_PORT}:9200
-      - ${ELASTICSEARCH_PORT_1}:9300
+      - "${ELASTICSEARCH_PORT}:9200"
+      - "${ELASTICSEARCH_PORT_1}:9300"
     volumes:
       - ./db/elastic:/bitnami/elasticsearch/data
     networks:
@@ -136,7 +137,7 @@ services:
     env_file:
       - .env
     ports:
-      - s{kIBANA_PORT}:5601
+      - "${kIBANA_PORT}:5601"
     networks:
       - docker-network-dev
 
