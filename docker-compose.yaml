@@ -13,7 +13,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     networks:
       - docker-network-dev
 
@@ -88,8 +88,8 @@ services:
     container_name: mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     env_file:
       - .env
     ports:
@@ -133,7 +133,7 @@ services:
     container_name: kibana
     restart: always
     environment:
-      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_HOST}
+      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_HOSTS}
     env_file:
       - .env
     ports:
