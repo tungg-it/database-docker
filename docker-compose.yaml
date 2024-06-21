@@ -89,13 +89,17 @@ services:
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_DATABASE_USERNAME: ${MONGO_DATABASE_USERNAME}
+      MONGO_DATABASE_PASSWORD: ${MONGO_DATABASE_PASSWORD}
     env_file:
       - .env
     ports:
       - "${MONGO_PORT}:27017"
     volumes:
       - ./db/mongodb:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d/:ro
     networks:
       - docker-network-dev
 
